@@ -1,0 +1,17 @@
+version : 3
+
+tasks:
+  build:
+    cmds:
+      - go build -o ./bin/app cmd/chat/main.go 
+  run-first:
+    dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
+    cmds:
+      - task build
+      - ./bin/app -port $FIRST_PORT
+  run-second:
+    dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
+    cmds:
+      - task build 
+      - ./bin/app -port $SECOND_PORT
+
