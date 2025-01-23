@@ -5,6 +5,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/osamikoyo/chat-to-chat/internal/data"
 	"os"
 	"strings"
 
@@ -13,6 +14,10 @@ import (
 )
 
 func main() {
+	storage, err := data.New()
+	if err != nil{
+		fmt.Print(err)
+	}
 	port := flag.Int("port", 0, "Port to listen on")
 	flag.Parse()
 
@@ -55,7 +60,19 @@ func main() {
 
 		if strings.HasPrefix(input, "/history ") {
 			peerAddr := strings.TrimPrefix(input, "/history ")
-			
+			addr := chatHost.Host.Addrs()[0]
+			messages, err := storage.Get(10, peerAddr, fmt.Sprintf("%s/p2p/%s\n", addr, chatHost.Host.ID().String()))
+			if err != nil{
+				fmt.Print(err)
+			}
+
+			for _,  msg := range messages{
+				if msg.Receiver == peerAddr {
+					fmt.Printf("%s", msg.Content)
+				} else {
+					fmt.Printf("										%s", msg.Content)
+				}
+			}
 		}
 
 		if strings.HasPrefix(input, "/connect ") {
