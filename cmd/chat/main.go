@@ -53,6 +53,11 @@ func main() {
 			break
 		}
 
+		if strings.HasPrefix(input, "/history ") {
+			peerAddr := strings.TrimPrefix(input, "/history ")
+			
+		}
+
 		if strings.HasPrefix(input, "/connect ") {
 			peerAddr := strings.TrimPrefix(input, "/connect ")
 			err := chatHost.Connect(peerAddr)

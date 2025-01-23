@@ -22,10 +22,11 @@ func (s Storage) Save(message models.Message) error {
 	return s.data.Create(&message).Error
 }
 
-func (s Storage) Get(count int) ([]models.Message, error) {
+func (s Storage) Get(count int, sender, reciewer string) ([]models.Message, error) {
 	var messages []models.Message
 
-	if err := s.data.Order("id desc").Limit(count).Find(&messages).Error; err != nil{
+	if err := s.data.Order("id desc").Limit(count).Where("reciewer = ? AND sender = ? OR reciewer = ? OR sender = ?",
+		sender, reciewer, reciewer, sender).Error; err != nil{
 		return nil, err
 	}
 
